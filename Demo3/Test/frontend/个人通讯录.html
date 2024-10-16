@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人通讯录</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        button {
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .btn-view {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-edit {
+            background-color: #FFC107;
+            color: white;
+        }
+
+        .btn-delete {
+            background-color: #F44336;
+            color: white;
+        }
+
+        .add-btn,
+        .batch-delete-btn {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .add-btn {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .batch-delete-btn {
+            background-color: #FF9800;
+            color: white;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .form-container {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+
+        .form-container label {
+            margin-right: 10px;
+        }
+
+        .form-container input {
+            margin: 5px 0;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>个人通讯录</h2>
+
+<div style="text-align:center;">
+    <button class="add-btn" onclick="showForm()">添加新联系人</button>
+    <button class="batch-delete-btn">批量删除联系人</button>
+</div>
+
+<!-- 表单区域，用于添加联系人 -->
+<div class="form-container" id="form-container" style="display: none;">
+    <h3>添加联系人</h3>
+    <label for="name">姓名:</label>
+    <input type="text" id="name" placeholder="输入姓名"><br>
+    <label for="phone">联系电话:</label>
+    <input type="text" id="phone" placeholder="输入电话号码"><br>
+    <button class="add-btn" onclick="addContact()">提交</button>
+</div>
+
+<table id="contact-table">
+    <thead>
+    <tr>
+        <th></th>
+        <th>姓名</th>
+        <th>联系电话</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td><input type="checkbox"></td>
+        <td>李美亭</td>
+        <td>19113499217</td>
+        <td>
+            <button class="btn-view" onclick="viewContact(this)">查看</button>
+            <button class="btn-edit" onclick="editContact(this)">修改</button>
+            <button class="btn-delete" onclick="deleteContact(this)">删除</button>
+        </td>
+    </tr>
+    <tr>
+        <td><input type="checkbox"></td>
+        <td>李美亭</td>
+        <td>18280081763</td>
+        <td>
+            <button class="btn-view" onclick="viewContact(this)">查看</button>
+            <button class="btn-edit" onclick="editContact(this)">修改</button>
+            <button class="btn-delete" onclick="deleteContact(this)">删除</button>
+        </td>
+    </tr>
+    <tr>
+        <td><input type="checkbox"></td>
+        <td>张三</td>
+        <td>12345678900</td>
+        <td>
+            <button class="btn-view" onclick="viewContact(this)">查看</button>
+            <button class="btn-edit" onclick="editContact(this)">修改</button>
+            <button class="btn-delete" onclick="deleteContact(this)">删除</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<script>
+    // 显示添加联系人表单
+    function showForm() {
+        document.getElementById('form-container').style.display = 'block';
+    }
+
+    // 添加联系人到表格
+    function addContact() {
+        var name = document.getElementById('name').value;
+        var phone = document.getElementById('phone').value;
+
+        if (name === "" || phone === "") {
+            alert("请输入姓名和电话！");
+            return;
+        }
+
+        var table = document.getElementById('contact-table').getElementsByTagName('tbody')[0];
+        var newRow = table.insertRow();
+        var checkboxCell = newRow.insertCell(0);
+        var nameCell = newRow.insertCell(1);
+        var phoneCell = newRow.insertCell(2);
+        var actionCell = newRow.insertCell(3);
+
+        checkboxCell.innerHTML = '<input type="checkbox">';
+        nameCell.innerHTML = name;
+        phoneCell.innerHTML = phone;
+
+        actionCell.innerHTML = `
+                <button class="btn-view" onclick="viewContact(this)">查看</button>
+                <button class="btn-edit" onclick="editContact(this)">修改</button>
+                <button class="btn-delete" onclick="deleteContact(this)">删除</button>
+            `;
+
+        document.getElementById('form-container').style.display = 'none';
+        document.getElementById('name').value = '';
+        document.getElementById('phone').value = '';
+    }
+
+    // 查看联系人信息
+    function viewContact(button) {
+        var row = button.parentNode.parentNode;
+        var name = row.cells[1].innerHTML;
+        var phone = row.cells[2].innerHTML;
+        alert("姓名: " + name + "\n联系电话: " + phone);
+    }
+
+    // 修改联系人信息
+    function editContact(button) {
+        var row = button.parentNode.parentNode;
+        var name = row.cells[1].innerHTML;
+        var phone = row.cells[2].innerHTML;
+        var newName = prompt("修改姓名:", name);
+        var newPhone = prompt("修改联系电话:", phone);
+        if (newName !== null && newName !== "") {
+            row.cells[1].innerHTML = newName;
+        }
+        if (newPhone !== null && newPhone !== "") {
+            row.cells[2].innerHTML = newPhone;
+        }
+    }
+
+    // 删除联系人
+    function deleteContact(button) {
+        var row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+</script>
+
+</body>
+
+</html>
